@@ -29,7 +29,30 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        getMethod()
+        GlobalScope.launch(Dispatchers.IO) {
+            val url = URL("http://192.168.1.145/api/sur/list")
+            val httpURLConnection = url.openConnection() as HttpURLConnection
+            httpURLConnection.setRequestProperty("Accept", "application/json") // The format of response we want to get from the server
+            httpURLConnection.requestMethod = "GET"
+            httpURLConnection.doInput = true
+            httpURLConnection.doOutput = false
+            // Check if the connection is successful
+            val responseCode = httpURLConnection.responseCode
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+                val response = httpURLConnection.inputStream.bufferedReader()
+                    .use { it.readText() }  // defaults to UTF-8
+                withContext(Dispatchers.Main) {
+
+                    // Convert raw JSON to pretty JSON using GSON library
+                    val gson = GsonBuilder().setPrettyPrinting().create()
+                    val prettyJson = gson.toJson(JsonParser.parseString(response))
+                    Log.d("Pretty Printed JSON :", prettyJson)
+
+                }
+            } else {
+                Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
+            }
+        }
         //getReprofit()
     }
 
@@ -44,31 +67,4 @@ fun getReprofit() :GitHubService
 
     val service: GitHubService = retrofit.create(GitHubService::class.java)
     return service
-}
-
-fun getMethod() {
-    GlobalScope.launch(Dispatchers.IO) {
-        val url = URL("http://192.168.1.145/api/sur/list")
-        val httpURLConnection = url.openConnection() as HttpURLConnection
-        httpURLConnection.setRequestProperty("Accept", "application/json") // The format of response we want to get from the server
-        httpURLConnection.requestMethod = "GET"
-        httpURLConnection.doInput = true
-        httpURLConnection.doOutput = false
-        // Check if the connection is successful
-        val responseCode = httpURLConnection.responseCode
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            val response = httpURLConnection.inputStream.bufferedReader()
-                .use { it.readText() }  // defaults to UTF-8
-            withContext(Dispatchers.Main) {
-
-                // Convert raw JSON to pretty JSON using GSON library
-                val gson = GsonBuilder().setPrettyPrinting().create()
-                val prettyJson = gson.toJson(JsonParser.parseString(response))
-                Log.d("Pretty Printed JSON :", prettyJson)
-
-            }
-        } else {
-            Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
-        }
-    }
 }
