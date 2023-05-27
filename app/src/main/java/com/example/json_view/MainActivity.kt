@@ -2,6 +2,7 @@ package com.example.json_view
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.GsonBuilder
@@ -47,7 +48,8 @@ class MainActivity : AppCompatActivity() {
                     val gson = GsonBuilder().setPrettyPrinting().create()
                     val prettyJson = gson.toJson(JsonParser.parseString(response))
                     Log.d("Pretty Printed JSON :", prettyJson)
-
+                    val textView: TextView = findViewById(R.id.content) as TextView
+                    textView.text = prettyJson
                 }
             } else {
                 Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
