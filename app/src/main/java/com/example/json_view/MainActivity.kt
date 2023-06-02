@@ -71,6 +71,10 @@ class MainActivity : AppCompatActivity() {
                             textData += "Production: "
                             textData += obj.asJsonObject.get("p_name")
                             textData += "\n"
+
+                            textData += "Sum risk: "
+                            textData += obj.asJsonObject.get("sum_risk")
+                            textData += "\n"
                         }
                         textView.text = textData
                     }
