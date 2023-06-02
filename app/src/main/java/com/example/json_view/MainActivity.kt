@@ -6,28 +6,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import java.net.HttpURLConnection
 import java.net.URL
-import kotlinx.serialization.json.Json
-import retrofit2.Call
-import retrofit2.http.GET
-
-data class Sur(
-    @JsonProperty("id") val id: Long,
-    @JsonProperty("c_name") val cName: String,
-    @JsonProperty("p_name") val pName: String
-)
-
-interface GitHubService {
-    @GET("api/sur/list")
-    fun getSurs(): Call<List<Sur>>
-}
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
