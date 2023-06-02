@@ -2,7 +2,6 @@ package com.example.json_view
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,12 +10,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Retrofit
-import retrofit2.http.GET
-import retrofit2.http.Path
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlinx.serialization.json.Json
+import retrofit2.Call
+import retrofit2.http.GET
 
 data class Sur(
     @JsonProperty("id") val id: Long,
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //getReprofit()
         val  clickButton: Button = findViewById(R.id.button);
         clickButton.setOnClickListener {
             Log.d("BUTTONS", "User tapped the Supabutton")
@@ -55,10 +54,25 @@ class MainActivity : AppCompatActivity() {
 
                         // Convert raw JSON to pretty JSON using GSON library
                         val gson = GsonBuilder().setPrettyPrinting().create()
-                        val prettyJson = gson.toJson(JsonParser.parseString(response))
-                        Log.d("Pretty Printed JSON :", prettyJson)
+                        val prettyJson = JsonParser.parseString(response)
+                        //Log.d("Pretty Printed JSON :", prettyJson)
                         val textView: TextView = findViewById(R.id.content) as TextView
-                        textView.text = prettyJson
+
+                        var textData :String = ""
+                        for (obj in prettyJson.asJsonArray) {
+                            textData += "ID: "
+                            textData += obj.asJsonObject.get("id")
+                            textData += "\n"
+
+                            textData += "Country: "
+                            textData += obj.asJsonObject.get("c_name")
+                            textData += "\n"
+
+                            textData += "Production: "
+                            textData += obj.asJsonObject.get("p_name")
+                            textData += "\n"
+                        }
+                        textView.text = textData
                     }
                 } else {
                     Log.e("HTTPURLCONNECTION_ERROR", responseCode.toString())
@@ -70,12 +84,3 @@ class MainActivity : AppCompatActivity() {
 
 }
 
-fun getReprofit() :GitHubService
-{
-    val retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.1.145/")
-        .build()
-
-    val service: GitHubService = retrofit.create(GitHubService::class.java)
-    return service
-}
