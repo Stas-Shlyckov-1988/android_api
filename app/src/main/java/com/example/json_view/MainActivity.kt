@@ -34,9 +34,6 @@ class MainActivity : AppCompatActivity() {
                     val response = httpURLConnection.inputStream.bufferedReader()
                         .use { it.readText() }  // defaults to UTF-8
                     withContext(Dispatchers.Main) {
-
-                        // Convert raw JSON to pretty JSON using GSON library
-                        val gson = GsonBuilder().setPrettyPrinting().create()
                         val prettyJson = JsonParser.parseString(response)
                         //Log.d("Pretty Printed JSON :", prettyJson)
                         val textView: TextView = findViewById(R.id.content) as TextView
