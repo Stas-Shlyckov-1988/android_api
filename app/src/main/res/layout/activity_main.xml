@@ -23,7 +23,7 @@
         android:layout_marginStart="1dp"
         android:ems="10"
         android:inputType="text"
-        android:text="192.168.1.149"
+        android:text="akfk.fitorf.ru"
         app:layout_constraintBottom_toTopOf="@+id/content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
