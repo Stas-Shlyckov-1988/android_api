@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("BUTTONS", "User tapped the Supabutton")
             GlobalScope.launch(Dispatchers.IO) {
                 val editText: EditText = findViewById(R.id.editTextText) as EditText
-                val url = URL("https://" + editText.text + "/api/sur/list")
+                val url = URL(editText.text.toString())
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.setRequestProperty("Accept", "application/json") // The format of response we want to get from the server
                 httpURLConnection.requestMethod = "GET"
